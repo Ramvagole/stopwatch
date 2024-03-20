@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  #time {
+    font-size: 2em;
+    margin: 20px 0;
+  }
+  #buttons {
+    margin: 20px 0;
+  }
+  button {
+    font-size: 1em;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div id="time">00:00:00</div>
+<div id="buttons">
+  <button onclick="start()">Start</button>
+  <button onclick="pause()">Pause</button>
+  <button onclick="reset()">Reset</button>
+</div>
+
+<script>
+  let timer;
+  let startTime;
+  let running = false;
+  let elapsedTime = 0;
+
+  function start() {
+    if (!running) {
+      running = true;
+      startTime = Date.now() - elapsedTime;
+      timer = setInterval(updateTime, 100);
+    }
+  }
+
+  function pause() {
+    if (running) {
+      running = false;
+      clearInterval(timer);
+    }
+  }
+
+  function reset() {
+    clearInterval(timer);
+    running = false;
+    elapsedTime = 0;
+    updateTime();
+  }
+
+  function updateTime() {
+    const currentTime = Date.now();
+    elapsedTime = currentTime - startTime;
+    displayTime(elapsedTime);
+  }
+
+  function displayTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const formattedTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    document.getElementById('time').textContent = formattedTime;
+  }
+
+  function pad(num) {
+    return num.toString().padStart(2, '0');
+  }
+</script>
+</body>
+</html>
